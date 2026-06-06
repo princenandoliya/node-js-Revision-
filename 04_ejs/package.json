@@ -1,0 +1,22 @@
+{
+  "type": "module",
+  "dependencies": {
+    "ejs": "^5.0.2",
+    "express": "^5.2.1"
+  },
+  "name": "04_ejs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node all.js",
+    "dev": "node --watch all.js"
+    
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+  
+}
