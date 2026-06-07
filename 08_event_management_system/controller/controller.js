@@ -51,37 +51,40 @@ const allevent = async (req, res, next) => {
     }
 }
 
-const deleteEvent = async (req, res, next) => {
+
+const deleteEvent = async(req,res,next)=>{
+
     try {
-
-
+        
         const id = req.params.id
+        console.log(id)
 
         const deleteEvent = await Event.findByIdAndDelete(id)
+        console.log(deleteEvent)
 
-        if (!deleteEvent) {
-            return next(new HttpError("failed to delete Event", 404))
+        if(!deleteEvent){
+            return next(new HttpError("fail to delet event"))
         }
 
-      const fileDelete = [
-        deleteEvent.eventBanner,
-        ...deleteEvent.eventPoster,
-        ...deleteEvent.eventSpeaker
-      ]
+        const fileDelete = [
+            deleteEvent.eventBanner,
+            ...deleteEvent.eventPoster,
+            ...deleteEvent.eventSpeaker
+        ]
 
-      fileDelete.forEach((file)=>{
-        if(fs.existsSync(file)){
-            fs.unlinkSync(file)
-        }else{
+        fileDelete.forEach((file)=>{
+            if(fs.existsSync(file)){
+                fs.unlinkSync(file)
+            }else{
+                return next(new HttpError("fail to delete event",404))
+            }
+        })
 
-            return next(new HttpError("fail to delete event",404))
-        }
-      })
+        res.status(200).json({success:true,message:"event delete successfully"})
 
-      res.status(200).json({success:true,message:"Event delete successfully"})
 
     } catch (error) {
-        return next(new HttpError(error.message, 500))
+        return next(new HttpError(error.message,500))
     }
 }
 
