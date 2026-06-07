@@ -27,5 +27,7 @@ controller.add
 
 router.get("/allevent",controller.allevent)
 
+router.delete("/:id",controller.deleteEvent)
+
 export default router
 
