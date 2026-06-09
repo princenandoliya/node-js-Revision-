@@ -94,7 +94,6 @@ const deleteEvent = async (req, res, next) => {
             );
         }
 
-        // delete banner
         if (
             deleteEvent.eventBanner &&
             fs.existsSync(
@@ -106,7 +105,6 @@ const deleteEvent = async (req, res, next) => {
             );
         }
 
-        // delete posters
         if (
             deleteEvent.eventPoster?.length
         ) {
@@ -121,7 +119,6 @@ const deleteEvent = async (req, res, next) => {
             );
         }
 
-        // delete from db
         await Event.findByIdAndDelete(id);
 
         return res.status(200).json({
@@ -180,13 +177,12 @@ const updateEvent = async (req,res,next)=> {
             );
         }
 
-        // BODY UPDATE
         updates.forEach((field)=>{
                 EventData[field] = req.body[field];
             }
         );
 
-        // update banner
+        
         if (
             req.files?.eventBanner
         ) {
@@ -208,7 +204,6 @@ const updateEvent = async (req,res,next)=> {
                     .path;
         }
 
-        // update poster
         if (
             req.files?.eventPoster
         ) {
