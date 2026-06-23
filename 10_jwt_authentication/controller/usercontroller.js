@@ -1,5 +1,5 @@
 import HttpError from "../middleware/HttpError.js";
-import user from "../model/usermodel.js";
+import users from "../model/usermodel.js";
 
 
 const add = async(req,res,next)=>{
@@ -7,7 +7,7 @@ const add = async(req,res,next)=>{
         
         const {name,email,password} = req.body
 
-        const newuser = new user({
+        const newuser = new users({
             name,
             email,
             password
@@ -26,7 +26,7 @@ const getall = async(req,res,next)=>{
 
     try {
         
-        const users = await user.find({})
+        const users = await users.find({})
 
         if(!users){
             res.status(404).json({success:false,message:"no user data found"})
@@ -39,4 +39,29 @@ const getall = async(req,res,next)=>{
         
     }
 }
-export default {add,getall}
+
+
+const login = async(req,res,next)=>{
+    try {
+        
+        const {email,password} = req.body
+
+        const user = await users.findbycredentials(email,password)
+
+        if(!user){
+            next(new HttpError("unable to login"))
+        }
+
+        res.status(200).json({success:true,user})
+
+
+
+    } catch (error) {
+        console.log("LOGIN ERROR:", error);
+    console.log("MESSAGE:", error.message);
+
+
+        next (new HttpError(Error.message))
+    }
+}
+export default {add,getall,login}
