@@ -25,35 +25,39 @@ const userSchema = mongoose.Schema({
 })
 
 
+userSchema.pre("save",async function (){
 
-userSchema.pre("save", async function () {
     const user = this
-    if (user.isModified("password")) {
-        user.password = await bcrypt.hash(user.password, 10)
+
+    if(user.isModified("password")){
+        user.password = await bcrypt.hash(user.password,10)
     }
+    
 })
 
-userSchema.statics.findbycredentials = async function (email, password) {
 
+userSchema.statics.findByCredentials = async function (email,password) {
     try {
-        const user = await this.findOne({ email })
-        if (!user) {
+        
+        const user = await this.findOne({email})
+        if(!user){
             throw new Error("unable to login")
         }
 
-        const isMatched = await bcrypt.compare(password, user.password)
-        if (!isMatched) {
+        const isMathed = await bcrypt.compare(password,user.password)
+        if(!isMathed){
             throw new Error("unable to login")
         }
 
-            return user
+        return user
+
+
 
     } catch (error) {
-        throw new Error(Error.message)
-
+        throw new Error(error.message);
+        
     }
-
-
+    
 }
 
 
