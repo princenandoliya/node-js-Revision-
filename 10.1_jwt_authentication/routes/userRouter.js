@@ -7,4 +7,6 @@ router.post("/add",usercontroller.add)
 
 router.get("/all",usercontroller.getall)
 
+router.post("/login",usercontroller.login)
+
 export default router

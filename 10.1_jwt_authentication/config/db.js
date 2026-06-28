@@ -5,6 +5,7 @@ import HttpError from "../middleware/HttpError.js";
 async function connectDb() {
     try {
         
+        
 
         const connect = await mongoose.connect(
             process.env.MONGO_URI

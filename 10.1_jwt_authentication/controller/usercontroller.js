@@ -42,4 +42,23 @@ const getall = async(req,res,next)=>{
     }
 }
 
-export default {add,getall}
+const login = async (req, res, next) => {
+    try {
+
+
+        const { email, password } = req.body
+
+        const users = await user.findByCredentials(email, password)
+
+        if (!users) {
+            next(new HttpError("unable to login"))
+        }
+
+        res.status(200).json({ success: true, users })
+
+    } catch (error) {
+        next(new HttpError(error.message))
+    }
+}
+
+export default {add,getall,login}

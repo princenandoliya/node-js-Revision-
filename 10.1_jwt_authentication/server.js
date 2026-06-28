@@ -22,12 +22,14 @@ app.use((req,res,next)=>{
     next(new HttpError("requested routes are not found"))
 })
 
-app.get((err, req, res, next) => {
+app.use((err, req, res, next) => {
+    console.error(err);
+
     res.status(err.StatusCode || 500).json({
         success: false,
-        mesaage: err.mesaage
-    })
-})
+        message: err.message
+    });
+});
 
 const port = 5000
 
