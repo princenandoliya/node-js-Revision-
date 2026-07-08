@@ -2,31 +2,63 @@ import express from "express"
 import HttpError from "./middleware/HttpError.js"
 import connectDB from "./config/db.js"
 import dotenv from "dotenv"
-dotenv.config({path: "./.env"})
+import router from "./routes/userroutes.js"
+import profileRouter from "./routes/profileRouter.js"
+import pasport from "./config/passport.js"
+import session from "express-session"
 
-
+dotenv.config({ path: "./.env" })
 const app = express()
 
 
-app.get("/",(req,res)=>{
-    res.send("hello from server")
+
+app.use(express.json())
+
+
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        secure: false,
+        maxAge: 24 * 60 * 60 * 1000
+    }
+})
+)
+
+app.use(pasport.initialize())
+app.use(pasport.session())
+
+app.use("/auth", router)
+app.use("/profile", profileRouter)
+
+app.set("view engine", "ejs")
+
+app.get("/", (req, res) => {
+    res.render("home",{user: req.user})
 })
 
-app.use((req,res,next)=>{
+
+
+app.use((req, res, next) => {
     next(new HttpError("requested routes are not found"))
 })
 
-app.use((err, req, res, next) => {
-    console.error(err);
 
-    res.status(err.StatusCode || 500).json({
-        success: false,
-        message: err.message
-    });
+
+
+app.use((error, req, res, next) => {
+    if (res.headersSent) {
+        return next(error)
+    }
+
+    res.status(error.statusCode || 500)
+        .json({ message: error.message || "internal server error" })
 });
 
-
 const port = 5000
+
+
 
 async function server() {
     try {
@@ -34,22 +66,22 @@ async function server() {
         const connect = await connectDB()
 
         if (!connect) {
-            throw new error("fail to connect DB")
+            throw new Error(" fail to connect db");
+
         }
+
         app.listen(port, (err) => {
             if (err) {
                 return console.log(err.message)
             }
 
-            console.log(`server runing on port ${port}`)
+            console.log(`server runing on port${port}`)
         })
 
     } catch (error) {
-        console.log(error.message)
+        console.log(Error.message)
         process.exit(1)
-
     }
-
 }
-server()
 
+server()
