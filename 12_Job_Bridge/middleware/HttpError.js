@@ -1,6 +1,5 @@
 class HttpError extends Error{
-    constructor(StatusCode,message){
-        super(message)
+    constructor(message,StatusCode){
 
         this.StatusCode = StatusCode
     }
